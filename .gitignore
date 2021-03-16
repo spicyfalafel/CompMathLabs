@@ -1,0 +1,14 @@
+*.iml
+
+lab1/.bsp
+lab1/target
+lab1/project/target
+lab1/null
+
+lab2/node_modules/**
+lab2/e2e
+lab2/.*
+lab2/package-lock.json
+lab2/karma.conf.js
+lab2/tsc*
+lab2/tslint.json
