@@ -1,0 +1,52 @@
+<div id="cont">
+  <div class="wrapper">
+    <div>
+      <h2>Функция</h2>
+      <mat-radio-group>
+        <mat-radio-button (change)="chooseFunction(f)" [value]="f"
+                          *ngFor="let f of functions">
+          f(x) = {{f.view}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div>
+      <h2>Метод</h2>
+      <mat-radio-group>
+        <mat-radio-button (change)="chooseMethod(m)" [value]="m"
+                          *ngFor="let m of methods">
+          {{m.name}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div>
+      <h2>Формат ввода и вывода</h2>
+      <mat-radio-group>
+        <mat-radio-button value="1">Из файла</mat-radio-button>
+        <mat-radio-button value="2">Из формы</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div>
+      <h2>Границы интервалов</h2>
+      <label>От
+        <input type="text" (change)="chooseIntervalStart(+start.value)" #start
+        [value]="0">
+      </label>
+      <br/>
+      <label>До
+        <input type="text" (change)="chooseIntervalEnd(+end.value)" #end
+        [value]="5">
+      </label>
+    </div>
+    <div>
+      <h2>Начальное приближение</h2>
+      <input type="text" >
+    </div>
+    <div>
+      <h2>Погрешность</h2>
+      <input type="text" (change)="chooseEps(+eps.value)" #eps [value]="0.001">
+    </div>
+    <button style="height: 20px">Найти корень</button>
+  </div>
+</div>

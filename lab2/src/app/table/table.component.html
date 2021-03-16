@@ -1,0 +1,14 @@
+<div>
+  <h1>fsdfds</h1>
+  <table>
+    <th *ngFor="let col of headers">
+      {{headers.length}}
+      {{col}}
+    </th>
+    <tr *ngFor="let row of rows">
+      <td *ngFor="let column of headers">
+        {{row[column]}}
+      </td>
+    </tr>
+  </table>
+</div>
