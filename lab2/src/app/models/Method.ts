@@ -1,4 +1,5 @@
 import {MathFunction} from './MathFunction';
+import {DataFromFormModel} from './DataFromFormModel';
 
 export interface Method {
   name: string,
@@ -8,5 +9,6 @@ export interface Method {
   eps:number,
   solve():any[],
   result: any[],
-  headers: string[]
+  headers: string[],
+  setData(data: DataFromFormModel);
 }

@@ -1,14 +1,14 @@
-<div>
-  <h1>fsdfds</h1>
-  <table>
-    <th *ngFor="let col of headers">
-      {{headers.length}}
-      {{col}}
-    </th>
-    <tr *ngFor="let row of rows">
-      <td *ngFor="let column of headers">
-        {{row[column]}}
-      </td>
-    </tr>
-  </table>
+<div style="display: flex; justify-content: center;">
+  <div>
+    <table border="3" style="align-content: center; border: #333333">
+      <th *ngFor="let col of headers">
+        {{col}}
+      </th>
+      <tr *ngFor="let row of rows">
+        <td *ngFor="let column of headers">
+          {{row[column]}}
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

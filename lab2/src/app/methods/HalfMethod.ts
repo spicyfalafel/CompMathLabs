@@ -1,34 +1,57 @@
 import {Method} from '../models/Method';
 import {MathFunction} from '../models/MathFunction';
+import {DataFromFormModel} from '../models/DataFromFormModel';
 
 export class HalfMethod implements Method {
 
   constructor() {
     this.name = 'Метод половинного деления';
     this.iter = 0;
-    this.headers = ['Итерация','a', 'b', 'x', 'F(a)', 'F(b)', 'F(x)', '|a-b|'];
+    this.headers = ['i', 'a', 'b', 'x', 'fa', 'fb', 'fx', 'absAMinusB'];
   }
 
-  name: string;
-  result = [];
-  headers: string[];
   a: number;
   b: number;
   eps: number;
   func: MathFunction;
+  secantsX: { x1: number, x2: number }[];
+
+  setData(data: DataFromFormModel) {
+    console.log('SETTING DATA IN HALF METHOD', data);
+    this.a = data.a;
+    this.b = data.b;
+    this.eps = data.eps;
+    this.func = data.func;
+    console.log('data func', data.func);
+  }
+
+  name: string;
+  result: any[] = [];
+  headers: string[];
   iter: number;
 
   solve(): any[] {
-    while (this.iteration() > this.eps) {
+    while (this.iteration()) {
+      console.log('a is ', this.a);
+      console.log('b is ', this.b);
+      console.log('iteration');
     }
-    return this.result;
+    const t = this.result;
+    this.result = [];
+    this.iter = 0;
+    return t;
   }
 
-  iteration(): number {
+  sameZnak(a: number, b: number) {
+    return (a >= 0 && b >= 0) || (a <= 0 && b <= 0);
+  }
+
+  iteration(): boolean {
     const fun = this.func.fnc;
     const fa = fun(this.a);
     const fb = fun(this.b);
-    const x = (fa + fb) / 2.0;
+    const x = (this.a + this.b) / 2.0;
+    const fx = fun(x);
     this.result.push({
       i: ++this.iter,
       a: this.a,
@@ -36,9 +59,17 @@ export class HalfMethod implements Method {
       x: x,
       fa: fa,
       fb: fb,
-      fx: fun(x),
+      fx: fx,
       absAMinusB: Math.abs(this.a - this.b)
     });
-    return (fa + fb) / 2.0;
+    if (this.sameZnak(fa, fx)) {
+      if (this.sameZnak(fb, fx)) {
+        return false;
+      }
+      this.a = x;
+    } else {
+      this.b = x;
+    }
+    return fx > this.eps || Math.abs(this.a - this.b) > this.eps;
   }
 }

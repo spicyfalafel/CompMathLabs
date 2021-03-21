@@ -1,6 +1,7 @@
-import {AfterContentInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Chart} from 'chart.js';
 import {MathFunction} from '../models/MathFunction';
+import {DataFromFormModel} from '../models/DataFromFormModel';
 
 @Component({
   selector: 'app-chart',
@@ -11,13 +12,28 @@ import {MathFunction} from '../models/MathFunction';
 
 export class ChartComponent implements OnInit, OnChanges {
   chart = [];
-  @Input() func: MathFunction;
-  @Input() startNum: number;
-  @Input() endNum: number;
-  start: number = -4;
-  finish: number = 4;
+  labels = [];
+  @Input() dataForm: DataFromFormModel;
+  @Input() dataFromMethod;
+  data;
+
+  @Input() secants: boolean;
+  private readonly step: number;
+
 
   constructor(private elementRef: ElementRef) {
+    const step = 0.1;
+    this.step = step;
+    for (let i = -20; i <= 20; i++) {
+      this.labels[i + 20] = this.round(step * i, 3);
+    }
+    if (!this.dataFromMethod) {
+      this.dataFromMethod =
+        [{
+          a: 0,
+          b: 5
+        }];
+    }
   }
 
   round(x: number, pow: number) {
@@ -25,33 +41,65 @@ export class ChartComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.setChart();
+    if (this.secants) {
+      this.drawWithSecants();
+    } else {
+      this.setChart();
+    }
   }
 
   ngOnInit(): void {
+    if (!this.dataFromMethod) {
+      this.dataFromMethod =
+        [{
+          a: 0,
+          b: 5
+        }];
+    }
+    this.resetChartData();
     this.setChart();
   }
 
-  setChart() {
-    const htmlRef = this.elementRef.nativeElement.querySelector(`#canvas`);
-    const step = 0.25
-    const labels = []
-    for(let i = -20; i<20;i++){
-      labels[i+20] = this.round(step*i, 3);
+  drawWithSecants() {
+    console.log('drawing with secants', this.dataFromMethod);
+    this.resetChartData();
+    for (const row of this.dataFromMethod) {
+      const a = row.xIminus1;
+      const b = row.xi;
+      const fa = this.dataForm.func.fnc(a);
+      const fb = this.dataForm.func.fnc(b);
+      this.data.datasets.push({
+        data: [],
+        pointRadius: 0,
+        function: x => (-(a * fb - b * fa) - (fa - fb) * x) / (b - a),
+        fill: false,
+        borderWidth: 0,
+        borderColor: 'orange',
+        spanGaps: true
+      });
     }
+    this.setChart();
+  }
 
-    const data = {
-      labels: labels/*[-5,-4, -3, -2, -1, 0, 1, 2, 3, 4,5]*/,
+
+  resetChartData() {
+    this.data = {
+      labels: this.labels,
       datasets: [
         {
           label: 'f(x)',
-          function: this.func.fnc,
+          function: this.dataForm.func.fnc,
           data: [],
           borderColor: '#3cba9f',
           fill: false
         }
       ]
     };
+  }
+
+  setChart() {
+    console.log('setting chart');
+    const htmlRef = this.elementRef.nativeElement.querySelector(`#canvas`);
     const verticalLinePlugin = {
       getLinePosition: function(chart, pointIndex) {
         const meta = chart.getDatasetMeta(0); // first dataset is used to discover X coordinate of a point
@@ -82,9 +130,7 @@ export class ChartComponent implements OnInit, OnChanges {
         }
       }
     };
-
     Chart.plugins.register(verticalLinePlugin);
-
     Chart.pluginService.register({
       beforeInit(chart) {
         const data = chart.config.data;
@@ -98,8 +144,8 @@ export class ChartComponent implements OnInit, OnChanges {
         }
       }
     });
-    const end: number = data.labels.indexOf(this.endNum);
-    const start: number = data.labels.indexOf(this.startNum);
+    const start: number = this.data.labels.indexOf(this.dataForm.a);
+    const end: number = this.data.labels.indexOf(this.dataForm.b);
     const lines = [];
     if (end != -1 && start != -1) {
       lines[0] = start;
@@ -108,9 +154,15 @@ export class ChartComponent implements OnInit, OnChanges {
 
     this.chart = new Chart(htmlRef, {
       type: 'line',
-      data: data,
+      data: this.data,
       lineAtIndex: lines,
       options: {
+        legend: {
+          display: false
+        },
+        animation: {
+          duration: 2000
+        },
         scales: {
           yAxes: [{
             ticks: {

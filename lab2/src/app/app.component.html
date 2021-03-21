@@ -24,21 +24,21 @@
     align-items: center;
   }
 
+  div {
+    align-items: center;
+    margin: 0 auto;
+  }
+
 
 </style>
 <div>
-
   <div class="content">
-    <app-chart [func]="func" [endNum]="end" [startNum]="start"></app-chart>
-    <app-form (chosenFunction)="getFunc($event)"
-              (chosenMethod)="getMeth($event)"
-              (eps)="getEps($event)"
-              (start)="getStart($event)"
-              (end)="getEnd($event)"
-              [functions]="functions"
-              [methods]="methods" (change)="solve()"
-    ></app-form>
+    <app-chart [dataFromMethod]="rows"
+               [secants]="secants" [dataForm]="dataFormForm"></app-chart>
+    <app-form [functions]="functions"
+              [methods]="methods" (change)="solve()" (dataChosen)="changeData($event)"></app-form>
   </div>
+  <h1 align="center">Answer: {{result}}</h1>
   <app-table [headers]="headers" [rows]="rows"></app-table>
 </div>
 

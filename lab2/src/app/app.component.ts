@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {Method} from './models/Method';
-import {MathFunction} from './models/MathFunction';
 import {HalfMethod} from './methods/HalfMethod';
 import {IterationMethod} from './methods/IterationMethod';
 import {SecantMethod} from './methods/SecantMethod';
+import {DataFromFormModel} from './models/DataFromFormModel';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
   functions = [
     {
@@ -27,53 +27,55 @@ export class AppComponent implements OnInit{
     }
   ];
 
-  meth: Method;
-  func: MathFunction = this.functions[0];
+
+  dataFormForm: DataFromFormModel;
+
+
   headers: string[];
   rows: any[];
   methods: Method[];
 
-  start: number;
-  end: number;
-  eps: number;
-
   result: number;
-  getFunc(function1: MathFunction) {
-    this.func = function1;
+  secants: boolean;
+
+  changeSecants(bool:boolean) {
+    this.secants = bool;
   }
 
-  getMeth(method: Method) {
-    this.meth = method;
-    this.solve()
+  changeData(data) {
+    console.log('change data, current', this.dataFormForm, ' and now', data);
+    this.dataFormForm = data;
+    this.dataFormForm.method.setData(this.dataFormForm);
+    console.log('changed data: ', this.dataFormForm);
   }
 
-  solve(){
-    this.meth.a = this.start;
-    this.meth.b = this.end;
-    this.meth.eps = this.eps;
-    this.meth.func = this.func;
-    const res = this.meth.solve()
+
+  solve() {
+    if (!this.dataFormForm.method) {
+      return;
+    }
+
+    if (!this.dataFormForm.eps) {
+      this.dataFormForm.eps = 0.001;
+    }
+    const res = this.dataFormForm.method.solve();
     this.result = res[res.length - 1].x;
-    console.log('headers', this.meth.headers)
-    this.headers = this.meth.headers;
-    console.log('result', this.meth.result)
+    this.headers = this.dataFormForm.method.headers;
+    console.log(res);
     this.rows = res;
-    console.log("solved: ", this.result)
-  }
-
-  getStart(start: Number) {
-    this.start = +start;
-  }
-
-  getEnd(end: Number) {
-    this.end = +end;
-  }
-
-  getEps(eps: Number) {
-    this.eps = +eps;
+    console.log('solved: ', this.result);
   }
 
   ngOnInit(): void {
-    this.methods = [new HalfMethod(), new IterationMethod(), new SecantMethod()]
+    this.methods = [new HalfMethod(), new IterationMethod(), new SecantMethod()];
+    this.dataFormForm = {
+      a: 0,
+      b: 5,
+      eps: 0.0001,
+      func: this.functions[0],
+      method: this.methods[0],
+      secants: []
+    };
+    this.secants = true;
   }
 }

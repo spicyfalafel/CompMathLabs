@@ -1,5 +1,6 @@
 import {Method} from '../models/Method';
 import {MathFunction} from '../models/MathFunction';
+import {DataFromFormModel} from '../models/DataFromFormModel';
 
 export class IterationMethod implements Method {
   constructor() {
@@ -17,6 +18,13 @@ export class IterationMethod implements Method {
 
   solve(): any[] {
     return [];
+  }
+
+  setData(data: DataFromFormModel) {
+    this.a = data.a;
+    this.b = data.b;
+    this.eps = data.eps;
+    this.func = data.func;
   }
 
 }
