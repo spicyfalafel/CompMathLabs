@@ -22,10 +22,15 @@
 
     <div>
       <h2>Формат ввода и вывода</h2>
-      <mat-radio-group>
+      <mat-radio-group [(ngModel)]="fileInput">
         <mat-radio-button value="1">Из файла</mat-radio-button>
         <mat-radio-button value="2">Из формы</mat-radio-button>
       </mat-radio-group>
+      <div *ngIf=" fileInput == 1">
+        <div>Выберите файл</div>
+        <input type='file' (change)="onChangeFile($event)"/>
+        <div *ngIf="errorInFile" class="text-danger">Ошибка в файле</div>
+      </div>
     </div>
     <div>
       <h2>Границы интервалов</h2>
@@ -39,14 +44,15 @@
         [value]="5">
       </label>
     </div>
-    <!--<div>
+    <div>
       <h2>Начальное приближение</h2>
-      <input type="text" >
-    </div>-->
+      <input type="text" (change)="choosePribl(+pribl.value)" #pribl [value]="0">
+    </div>
     <div>
       <h2>Погрешность</h2>
       <input type="text" (change)="chooseEps(+eps.value)" #eps [value]="0.001">
-    </div><!--
-    <button style="height: 20px">Найти корень</button>-->
+    </div>
+    <div *ngIf="exceptionsService.errorMessage" class="bg-danger"> {{exceptionsService.errorMessage}}</div>
+    <div *ngIf="justError" class="bg-danger">Some error occured, please use your head and write valid inputs</div>
   </div>
 </div>

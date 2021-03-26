@@ -33,13 +33,15 @@
 </style>
 <div>
   <div class="content">
-    <app-chart [dataFromMethod]="rows"
-               [secants]="secants" [dataForm]="dataFormForm"></app-chart>
+    <app-chart [dataFromMethod]="rows" [dataForm]="dataFormForm"></app-chart>
     <app-form [functions]="functions"
               [methods]="methods" (change)="solve()" (dataChosen)="changeData($event)"></app-form>
   </div>
-  <h1 align="center">Answer: {{result}}</h1>
-  <app-table [headers]="headers" [rows]="rows"></app-table>
+  <h1 align="center" *ngIf="!errors">Answer: {{result}}</h1>
+
+  <h1 *ngFor="let error of errors;" style="color: red; margin: 0 auto; text-align: center">{{error}}</h1>
+
+  <app-table [data]="{headers: headers, rows:rows}"></app-table>
 </div>
 
 

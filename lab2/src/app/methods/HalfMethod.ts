@@ -17,7 +17,6 @@ export class HalfMethod implements Method {
   secantsX: { x1: number, x2: number }[];
 
   setData(data: DataFromFormModel) {
-    console.log('SETTING DATA IN HALF METHOD', data);
     this.a = data.a;
     this.b = data.b;
     this.eps = data.eps;
@@ -31,10 +30,17 @@ export class HalfMethod implements Method {
   iter: number;
 
   solve(): any[] {
+
+    this.errors = ['Нет корня на промежутке'];
+    console.log('a', this.a, 'b', this.b);
+    for (let i = this.a; i < this.b; i += (this.b- this.a) / 30) {
+      if (!this.sameZnak(this.func.fnc(i), this.func.fnc(this.a))) {
+        this.errors = [];
+        break;
+      }
+    }
+
     while (this.iteration()) {
-      console.log('a is ', this.a);
-      console.log('b is ', this.b);
-      console.log('iteration');
     }
     const t = this.result;
     this.result = [];
@@ -45,6 +51,8 @@ export class HalfMethod implements Method {
   sameZnak(a: number, b: number) {
     return (a >= 0 && b >= 0) || (a <= 0 && b <= 0);
   }
+
+  errors: string[];
 
   iteration(): boolean {
     const fun = this.func.fnc;
@@ -64,6 +72,8 @@ export class HalfMethod implements Method {
     });
     if (this.sameZnak(fa, fx)) {
       if (this.sameZnak(fb, fx)) {
+
+        console.log(this.errors);
         return false;
       }
       this.a = x;

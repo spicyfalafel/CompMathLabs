@@ -6,9 +6,6 @@ export interface DataFromFormModel {
   a: number,
   b: number,
   method: Method,
-  secants: {
-    a: number,
-    b: number
-  }[],
-  eps: number
+  eps: number,
+  pribl: number
 }

@@ -1,14 +1,81 @@
 <div style="display: flex; justify-content: center;">
-  <div>
-    <table border="3" style="align-content: center; border: #333333">
-      <th *ngFor="let col of headers">
-        {{col}}
-      </th>
-      <tr *ngFor="let row of rows">
-        <td *ngFor="let column of headers">
-          {{row[column]}}
-        </td>
-      </tr>
-    </table>
-  </div>
+  <table mat-table [dataSource]="data.rows" class="mat-elevation-z8 mat-typography">
+    <!--'i', 'a', 'b', 'x', 'fa', 'fb', 'fx', 'absAMinusB' -->
+    <ng-container matColumnDef="i">
+      <th mat-header-cell *matHeaderCellDef>i</th>
+      <td mat-cell *matCellDef="let element">{{element.i}} </td>
+    </ng-container>
+    <ng-container matColumnDef="a">
+      <th mat-header-cell *matHeaderCellDef>a</th>
+      <td mat-cell *matCellDef="let element"> {{element.a | number}}  </td>
+    </ng-container>
+    <ng-container matColumnDef="b">
+      <th mat-header-cell *matHeaderCellDef>b</th>
+      <td mat-cell *matCellDef="let element"> {{element.b | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="x">
+      <th mat-header-cell *matHeaderCellDef>x</th>
+      <td mat-cell *matCellDef="let element"> {{element.x | number}}  </td>
+    </ng-container>
+    <ng-container matColumnDef="fa">
+      <th mat-header-cell *matHeaderCellDef>F(a)</th>
+      <td mat-cell *matCellDef="let element"> {{element.fa | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="fb">
+      <th mat-header-cell *matHeaderCellDef>F(b)</th>
+      <td mat-cell *matCellDef="let element"> {{element.fb | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="fx">
+      <th mat-header-cell *matHeaderCellDef>F(x)</th>
+      <td mat-cell *matCellDef="let element"> {{element.fx | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="absAMinusB">
+      <th mat-header-cell *matHeaderCellDef>|a-b|</th>
+      <td mat-cell *matCellDef="let element"> {{element.absAMinusB | number}} </td>
+    </ng-container>
+
+
+
+    <!--'i',
+      'xIminus1',
+      'xi',
+      'x',
+      'fx',
+      'absMinus'-->
+    <ng-container matColumnDef="xIminus1">
+      <th mat-header-cell *matHeaderCellDef>x<sub>i-1</sub></th>
+      <td mat-cell *matCellDef="let element"> {{element.xIminus1 | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="xi">
+      <th mat-header-cell *matHeaderCellDef>x<sub>i</sub></th>
+      <td mat-cell *matCellDef="let element"> {{element.xi | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="xiPlus1">
+      <th mat-header-cell *matHeaderCellDef>x<sub>i+1</sub></th>
+      <td mat-cell *matCellDef="let element"> {{element.x | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="fxiPlus1">
+      <th mat-header-cell *matHeaderCellDef>f(x<sub>i+1</sub>)</th>
+      <td mat-cell *matCellDef="let element"> {{element.fxiPlus1 | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="absMinus">
+      <th mat-header-cell *matHeaderCellDef>|x<sub>i+1</sub>-x<sub>i</sub>|</th>
+      <td mat-cell *matCellDef="let element"> {{element.absMinus | number}} </td>
+    </ng-container>
+
+
+    <!--'xi', 'xiPlus1', 'phixiPlus1', 'fxiplus1', 'abs'-->
+    <ng-container matColumnDef="phixiPlus1">
+      <th mat-header-cell *matHeaderCellDef>φ(x<sub>i+1</sub>)</th>
+      <td mat-cell *matCellDef="let element"> {{element.phixiPlus1 | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="fxiplus1">
+      <th mat-header-cell *matHeaderCellDef>f(x<sub>i+1</sub>)</th>
+      <td mat-cell *matCellDef="let element"> {{element.fxiplus1 | number}} </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="data.headers"></tr>
+    <tr mat-row *matRowDef="let row; columns: data.headers;"></tr>
+  </table>
 </div>

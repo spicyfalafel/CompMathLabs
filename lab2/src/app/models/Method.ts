@@ -10,5 +10,6 @@ export interface Method {
   solve():any[],
   result: any[],
   headers: string[],
+  errors?: string[],
   setData(data: DataFromFormModel);
 }

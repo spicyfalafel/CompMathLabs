@@ -1,6 +1,5 @@
 import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Chart} from 'chart.js';
-import {MathFunction} from '../models/MathFunction';
 import {DataFromFormModel} from '../models/DataFromFormModel';
 
 @Component({
@@ -16,10 +15,17 @@ export class ChartComponent implements OnInit, OnChanges {
   @Input() dataForm: DataFromFormModel;
   @Input() dataFromMethod;
   data;
+  secants: boolean;
+  step: number;
 
-  @Input() secants: boolean;
-  private readonly step: number;
 
+  changeSteps() {
+    this.labels = [];
+    for (let i = -20; i <= 20; i++) {
+      this.labels[i + 20] = this.round(this.step * i, 3);
+    }
+    this.setChart();
+  }
 
   constructor(private elementRef: ElementRef) {
     const step = 0.1;
@@ -34,6 +40,7 @@ export class ChartComponent implements OnInit, OnChanges {
           b: 5
         }];
     }
+    this.secants = false;
   }
 
   round(x: number, pow: number) {
@@ -41,11 +48,7 @@ export class ChartComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.secants) {
-      this.drawWithSecants();
-    } else {
-      this.setChart();
-    }
+    this.setChart();
   }
 
   ngOnInit(): void {
@@ -61,7 +64,6 @@ export class ChartComponent implements OnInit, OnChanges {
   }
 
   drawWithSecants() {
-    console.log('drawing with secants', this.dataFromMethod);
     this.resetChartData();
     for (const row of this.dataFromMethod) {
       const a = row.xIminus1;
@@ -98,7 +100,28 @@ export class ChartComponent implements OnInit, OnChanges {
   }
 
   setChart() {
-    console.log('setting chart');
+
+    if (this.secants) {
+      this.resetChartData();
+      for (const row of this.dataFromMethod) {
+        const a = row.xIminus1;
+        const b = row.xi;
+        const fa = this.dataForm.func.fnc(a);
+        const fb = this.dataForm.func.fnc(b);
+        this.data.datasets.push({
+          data: [],
+          pointRadius: 0,
+          function: x => (-(a * fb - b * fa) - (fa - fb) * x) / (b - a),
+          fill: false,
+          borderWidth: 0,
+          borderColor: 'orange',
+          spanGaps: true
+        });
+      }
+    } else {
+      this.resetChartData();
+    }
+
     const htmlRef = this.elementRef.nativeElement.querySelector(`#canvas`);
     const verticalLinePlugin = {
       getLinePosition: function(chart, pointIndex) {
@@ -117,11 +140,6 @@ export class ChartComponent implements OnInit, OnChanges {
         context.moveTo(lineLeftOffset, scale.top);
         context.lineTo(lineLeftOffset, scale.bottom);
         context.stroke();
-
-        // write label
-        //context.fillStyle = "#ff0000";
-        //context.textAlign = 'center';
-        //context.fillText('MY TEXT', lineLeftOffset, (scale.bottom - scale.top) / 2 + scale.top);
       },
 
       afterDatasetsDraw: function(chart, easing) {
@@ -172,5 +190,9 @@ export class ChartComponent implements OnInit, OnChanges {
         }
       }
     });
+  }
+
+  changeSecants() {
+    this.setChart();
   }
 }

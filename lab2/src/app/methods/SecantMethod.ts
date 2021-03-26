@@ -11,7 +11,7 @@ export class SecantMethod implements Method {
       'xIminus1',
       'xi',
       'x',
-      'fx',
+      'fxiPlus1',
       'absMinus'];
     this.result = [];
   }
@@ -31,7 +31,6 @@ export class SecantMethod implements Method {
     this.xi1 = this.a;
     this.xi = this.b;
     while (this.iteration(this.xi1, this.xi)) {
-      console.log('iteration');
     }
     const t = this.result;
     this.result = [];
@@ -55,7 +54,7 @@ export class SecantMethod implements Method {
       xIminus1: xi1,
       xi: xi,
       x: x,
-      fx: fx,
+      fxiPlus1: fx,
       absMinus: Math.abs(x - xi)
     });
     this.xi = x;
@@ -64,11 +63,9 @@ export class SecantMethod implements Method {
   }
 
   setData(data: DataFromFormModel) {
-    console.log('SETTING DATA IN HALF METHOD', data);
     this.a = data.a;
     this.b = data.b;
     this.eps = data.eps;
     this.func = data.func;
-    console.log('data func', data.func);
   }
 }
