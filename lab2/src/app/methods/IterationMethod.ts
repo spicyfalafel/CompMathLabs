@@ -5,7 +5,7 @@ import {DataFromFormModel} from '../models/DataFromFormModel';
 export class IterationMethod implements Method {
   constructor() {
     this.name = 'Метод итераций';
-    this.headers = ['i','xi', 'xiPlus1', 'phixiPlus1', 'fxiplus1', 'absMinus'];
+    this.headers = ['i', 'xi', 'xiPlus1', 'phixiPlus1', 'fxiplus1', 'absMinus'];
     this.iter = 0;
   }
 
@@ -20,7 +20,7 @@ export class IterationMethod implements Method {
   headers: string[];
   result: any[] = [];
 
-  errors: string[];
+  errors: string[] = [];
 
   solve(): any[] {
     this.errors = [];
@@ -35,12 +35,13 @@ export class IterationMethod implements Method {
     const q = Math.max(Math.abs(xFuncDerivative(this.a)), Math.abs(xFuncDerivative(this.b)));
     const numberToCompare = q <= 0.5 ? this.eps : (1 - q) * this.eps / q;
     if (q >= 1) {
-      this.errors = ['Достаточное условие метода не выполняется']
+      console.log(q);
+      this.errors.push('Достаточное условие метода не выполняется, q='+q);
       return;
     }
 
     let x = this.pribl;
-    let diff = 10000000000000;
+    let diff = 0;
     do {
       const nextX = phiFunc(x);
       diff = Math.abs(nextX - x);

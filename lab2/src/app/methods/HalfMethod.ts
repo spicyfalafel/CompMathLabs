@@ -30,7 +30,6 @@ export class HalfMethod implements Method {
   iter: number;
 
   solve(): any[] {
-
     this.errors = ['Нет корня на промежутке'];
     console.log('a', this.a, 'b', this.b);
     for (let i = this.a; i < this.b; i += (this.b- this.a) / 30) {
@@ -72,7 +71,6 @@ export class HalfMethod implements Method {
     });
     if (this.sameZnak(fa, fx)) {
       if (this.sameZnak(fb, fx)) {
-
         console.log(this.errors);
         return false;
       }

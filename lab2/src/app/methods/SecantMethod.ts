@@ -26,28 +26,36 @@ export class SecantMethod implements Method {
   headers: string[];
   result: any[];
   iter: number;
+  pribl: number;
+  errors = []
+  xi1: number;
+  xi: number;
 
   solve(): any[] {
-    this.xi1 = this.a;
-    this.xi = this.b;
+    this.errors = [];
+    if(this.pribl<this.a || this.pribl > this.b){
+      this.errors.push("Выберите x0 из [a;b]")
+    }
+    this.xi1 = this.pribl;
+    this.xi = this.pribl + this.eps;
     while (this.iteration(this.xi1, this.xi)) {
     }
     const t = this.result;
+    console.log("t", t);
     this.result = [];
     this.iter = 0;
     return t;
   }
 
-  xi1: number;
-  xi: number;
 
   private iteration(xi1: number, xi: number) {
     const fun = this.func.fnc;
     const f1 = fun(xi1);
     const f2 = fun(xi);
-
-    const x = xi - ((xi - xi1) / (f2 - f1) * f2);
-    console.log('x is ', x);
+    const x = xi - ((xi - xi1) / (f2 - f1)) * f2;
+    if(isNaN(x)){
+      this.errors.push("Деление на 0")
+    }
     const fx = fun(x);
     this.result.push({
       i: ++this.iter,
@@ -59,6 +67,8 @@ export class SecantMethod implements Method {
     });
     this.xi = x;
     this.xi1 = xi;
+    console.log("x-xi", x-xi);
+    console.log("Math.abs(x - xi) > this.eps", Math.abs(x - xi) > this.eps);
     return Math.abs(x - xi) > this.eps && Math.abs(fx) > this.eps;
   }
 
@@ -67,5 +77,6 @@ export class SecantMethod implements Method {
     this.b = data.b;
     this.eps = data.eps;
     this.func = data.func;
+    this.pribl = data.pribl;
   }
 }

@@ -27,6 +27,7 @@
   div {
     align-items: center;
     margin: 0 auto;
+    text-align: center;
   }
 
 
@@ -37,9 +38,12 @@
     <app-form [functions]="functions"
               [methods]="methods" (change)="solve()" (dataChosen)="changeData($event)"></app-form>
   </div>
-  <h1 align="center" *ngIf="!errors">Answer: {{result}}</h1>
+  <button (click)="solve()">Solve</button>
+  <h1 align="center" *ngIf="!errors || errors.length == 0">Answer: {{result}},
+    Функция в корне: {{f}}, Количество итераций{{i}} {{fxiPlus1}} </h1>
 
   <h1 *ngFor="let error of errors;" style="color: red; margin: 0 auto; text-align: center">{{error}}</h1>
+  <h1 *ngFor="let error of errors2;" style="color: red; margin: 0 auto; text-align: center">{{error}}</h1>
 
   <app-table [data]="{headers: headers, rows:rows}"></app-table>
 </div>

@@ -26,9 +26,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TableComponent implements OnInit{
   @Input() data: {headers:string[], rows:any[]}
-  // @Input() headers: {display:string}[];
-  // @Input() rows: any[];
-
 
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

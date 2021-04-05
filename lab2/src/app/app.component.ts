@@ -16,22 +16,22 @@ export class AppComponent implements OnInit {
 
   functions = [
     {
-      view: 'x³-3,125x²-3,5x+2,458',
+      view: 'x³-3,125cos(x)-3,5x+2,458',
+      fnc: x => x * x * x - 3.125 * Math.cos(x) - 3.5 * x + 2.458,
+      derivative: x => 3 * x * x + 6.25 * Math.sin(x) - 3.5,
+      secondDerivative: x => 6 * x + 6.25 * Math.cos(x)
+    },
+    {
+      view: '3x³+4,75 sin(x)-1,5x-50.5',
+      fnc: x => x * x * x * 3 + 4.75 * Math.sin(x) - 1.5 * x - 50.5,
+      derivative: x => 9 * x * x + 4.75 * Math.cos(x) - 1.5,
+      secondDerivative: x => 18 * x - 4.75 / Math.sin(x)
+    },
+    {
+      view: 'x^3-3,125x^2-3,5x+2,458',
       fnc: x => x * x * x - 3.125 * x * x - 3.5 * x + 2.458,
       derivative: x => 3 * x * x - 6.25 * x - 3.5,
       secondDerivative: x => 6 * x - 6.25
-    },
-    {
-      view: '3x³+4,75x²-1,5x+7,525',
-      fnc: x => x * x * x * 3 + 4.76 * x * x - 1.5 * x + 7.525,
-      derivative: x => 9 * x * x + 9.52 * x - 1.5,
-      secondDerivative: x => 18 * x + 9.52
-    },
-    {
-      view: '-x³+1,625x²+10,5x-1,458',
-      fnc: x => -x * x * x + 1.625 * x * x + 10.5 * x - 1.458,
-      derivative: x => -3 * x * x + 2.35 * x + 10.5,
-      secondDerivative: x => -6 * x + 2.35
     }
   ];
   dataFormForm: DataFromFormModel;
@@ -42,22 +42,27 @@ export class AppComponent implements OnInit {
   result: number;
 
   errors: string[];
-
+  errors2: string[];
 
   changeData(data) {
+    this.errors2 = [];
     if ((isNaN(parseFloat(data.a)) ||
       isNaN(parseFloat(data.b)) ||
       isNaN(parseFloat(data.eps)) ||
       isNaN(parseFloat(data.pribl)))) {
-      this.errors = ['Please use only numbers'];
+      this.errors2 = ['Please use only numbers'];
       this.changeDetection.detectChanges();
-    }else{
+      console.log('was nan');
+    } else {
       this.dataFormForm = data;
       this.dataFormForm.method.setData(this.dataFormForm);
       console.log('changed dataFormForm: ', this.dataFormForm);
     }
   }
 
+  i:number;
+  f: number;
+  fxiPlus1: number;
   solve() {
     this.errors = [];
     this.changeDetection.detectChanges();
@@ -72,11 +77,15 @@ export class AppComponent implements OnInit {
       this.dataFormForm.eps = 0.001;
     }
     const res = this.dataFormForm.method.solve();
-    this.result = res[res.length - 1].x;
+
     this.headers = this.dataFormForm.method.headers;
     if (this.dataFormForm.method.errors) {
       this.errors = this.dataFormForm.method.errors;
     }
+    this.result = res[res.length - 1].x;
+    this.i = res[res.length - 1].i;
+    this.f = res[res.length - 1].fx
+    this.fxiPlus1 = res[res.length-1].fxiPlus1;
     console.log(res);
     this.rows = res;
     console.log('solved: ', this.result);
