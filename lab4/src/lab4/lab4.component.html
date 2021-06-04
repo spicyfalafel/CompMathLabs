@@ -1,0 +1,87 @@
+<div>
+    <div class="text-center h2 mt-3">Аппроксимация функции методом наименьших квадратов</div>
+    <div class="row">
+        <div class="col mt-4">
+            <canvas id="canvas" width="200" height="200">{{chart}}</canvas>
+        </div>
+        <div class="col m-4">
+            <div>Введите точки для аппроксимации функции, <strong>от 12 до 20</strong> штук</div>
+
+            <label id="example-radio-group-label">Формат ввода и вывода</label>
+
+            <mat-radio-group
+                    aria-labelledby="example-radio-group-label"
+                    class="example-radio-group"
+                    [(ngModel)]="fileType">
+                <mat-radio-button class="example-radio-button" [value]="true">
+                    Файл
+                </mat-radio-button>
+                <mat-radio-button class="example-radio-button" [value]="false">
+                    UI
+                </mat-radio-button>
+            </mat-radio-group>
+
+            <div class="my-3">
+                <form [formGroup]="pointsForm">
+                    <table>
+                        <tr formArrayName="xValues">
+                            <td><strong>x</strong></td>
+                            <td *ngFor="let x of pointsForm.controls['xValues']['controls']; let i=index">
+                                <input type="number" style="width: 45px" formControlName="{{i}}" [value]="i">
+                            </td>
+                        </tr>
+
+                        <tr formArrayName="yValues">
+                            <td><strong>f(x)</strong></td>
+                            <td *ngFor="let y of pointsForm.controls['yValues']['controls']; let i=index">
+                                <input type="number" style="width: 45px" formControlName="{{i}}">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="my-3">
+                        <button class="m-2" (click)="addPoint()">
+                            Добавить точку
+                        </button>
+                        <button class="m-2" (click)="removePoint()">
+                            Удалить точку
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="my-4" *ngIf="fileType">
+                <div>Выберите файл со входными данными</div>
+                <input (change)="onChangeFile($event)" type='file'/>
+                <div class="text-danger" *ngIf="errorMessage">Ошибка в файле: {{errorMessage}}</div>
+            </div>
+
+            <div>
+                <button [disabled]="isInvalidInput()" (click)="solveClick()">Исследование</button>
+            </div>
+            <div *ngIf="results">
+                <div>Результаты</div>
+                <div>Наименьшее отклонение: {{this.bestResult.srOtkl.toFixed(3)}}, функция наилучшего
+                    приближения: {{this.bestResult.view}}</div>
+                <div>Коэффициент корреляции Пирсона: {{pirson.toFixed(3)}}</div>
+                <table mat-table [dataSource]="results" class="mat-elevation-z8">
+                    <ng-container matColumnDef="view">
+                        <th mat-header-cell *matHeaderCellDef> Функция</th>
+                        <td mat-cell *matCellDef="let element"> {{element.view}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sumEps">
+                        <th mat-header-cell *matHeaderCellDef> Мера отклонения</th>
+                        <td mat-cell *matCellDef="let element"> {{element.sumEps.toFixed(4)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="srOtkl">
+                        <th mat-header-cell *matHeaderCellDef> Среднеквадратическое отклонение</th>
+                        <td mat-cell *matCellDef="let element"> {{element.srOtkl.toFixed(4)}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="['view', 'sumEps', 'srOtkl']"></tr>
+                    <tr mat-row *matRowDef="let row; columns: ['view', 'sumEps', 'srOtkl'];" style="margin: 10px;"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
