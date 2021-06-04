@@ -63,7 +63,9 @@ export class Lab5Component implements OnInit {
             sin: new FormControl(),
             e: new FormControl(),
             x3: new FormControl(),
-            xnumber: new FormControl()
+            xnumber: new FormControl(),
+            right: new FormControl(),
+            left: new FormControl()
         });
     }
 
@@ -184,42 +186,14 @@ export class Lab5Component implements OnInit {
             }
             const k = this.pointsForm.controls.xnumber.value;
             this.points = [];
-            for(let i = 0; i<k;i++){
+            const l = this.pointsForm.controls.left.value;
+            const r = this.pointsForm.controls.right.value;
+            const h = (r-l)/k;
+            for(let i = l; i<r;i+=h){
                 console.log({x: i, y: f(i)})
                 this.points.push({x: i, y: f(i)});
             }
         }
-    }
-
-    /*
-        FILE
-     */
-
-    file: File;
-    errorMessage: string;
-
-    onChangeFile(event): void {
-        const eventObj: MSInputMethodContext = event as MSInputMethodContext;
-        const target: HTMLInputElement = eventObj.target as HTMLInputElement;
-        const files: FileList = target.files;
-        this.file = files[0];
-        this.file.text().then((result) => {
-            try {
-                const params = JSON.parse(result);
-                const xValues: number[] = params.xValues.filter((x) => !isNaN(parseFloat(x)));
-                const yValues: number[] = params.yValues.filter((y) => !isNaN(parseFloat(y)));
-                if (xValues.length === yValues.length && xValues.length <= this.MAX_POINTS_COUNT &&
-                    xValues.length >= this.MIN_POINTS_COUNT) {
-                    this.points = xValues.map((x, i) => ({x, y: yValues[i]}));
-                    this.setXYToPoints();
-                    this.errorMessage = '';
-                } else {
-                    this.errorMessage = 'проверка по длине не пройдена';
-                }
-            } catch (e) {
-                this.errorMessage = 'ошибка во время чтения файла';
-            }
-        });
     }
 
 }
