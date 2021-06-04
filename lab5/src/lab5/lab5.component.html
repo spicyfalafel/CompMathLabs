@@ -1,0 +1,86 @@
+<div>
+    <hr>
+    <canvas id="canvas"></canvas>
+    <label id="input-type-label">Формат ввода</label>
+
+    <mat-radio-group
+            aria-labelledby="input-type-label"
+            class="example-radio-group"
+            [(ngModel)]="inputType">
+        <mat-radio-button class="example-radio-button" [value]="0">
+            Таблица
+        </mat-radio-button>
+        <mat-radio-button class="example-radio-button" [value]="1">
+            Функция
+        </mat-radio-button>
+    </mat-radio-group>
+
+
+    <form [formGroup]="pointsForm">
+        <div *ngIf="inputType === 0">
+            <table>
+                <tr formArrayName="xValues">
+                    <td><strong>x</strong></td>
+                    <td *ngFor="let x of pointsForm.controls['xValues']['controls']; let i=index">
+                        <input type="number" style="width: 45px" formControlName="{{i}}" [value]="i">
+                    </td>
+                </tr>
+
+                <tr formArrayName="yValues">
+                    <td><strong>f(x)</strong></td>
+                    <td *ngFor="let y of pointsForm.controls['yValues']['controls']; let i=index">
+                        <input type="number" style="width: 45px" formControlName="{{i}}">
+                    </td>
+                </tr>
+            </table>
+            <div class="my-3">
+                <button class="m-2" (click)="addPoint()">
+                    Добавить точку
+                </button>
+                <button class="m-2" (click)="removePoint()">
+                    Удалить точку
+                </button>
+            </div>
+        </div>
+        <div class="my-3" *ngIf="inputType === 1">
+            <div>
+                <label>
+                    Функция sin(x)
+                    <input type="checkbox" formControlName="sin">
+                    {{this.pointsForm.controls.sin.value}}
+                </label>
+            </div>
+            <div>
+                <label>
+                    Функция e^x
+                    <input type="checkbox" formControlName="e">
+                    {{this.pointsForm.controls.e.value}}
+                </label>
+            </div>
+            <div>
+                <label>
+                    Функция x^3
+                    <input type="checkbox" formControlName="x3">
+                    {{this.pointsForm.controls.x3.value}}
+                </label>
+            </div>
+            <div>
+                <label>
+                    Количество точек от 2 до 20
+                    <input type="number" formControlName="xnumber">
+                    {{this.pointsForm.controls.xnumber.value}}
+                </label>
+
+            </div>
+        </div>
+
+        <div class="my-3">
+            <label>
+                Аргумент X
+                <input type="number" formControlName="X">
+                {{this.pointsForm.controls.X.value}}
+            </label>
+        </div>
+        <button class="btn btn-primary btn-lg" (click)="solve()">SOLVE</button>
+    </form>
+</div>

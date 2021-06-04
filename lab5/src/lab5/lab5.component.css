@@ -1,0 +1,22 @@
+input[number]{
+    width: 45px;
+}
+
+
+
+
+mat-header-cell, mat-cell {
+    justify-content: center;
+}
+
+.example-radio-button {
+    margin: 5px;
+}
+
+.mat-row {
+    height: auto;
+}
+
+.mat-cell {
+    padding: 8px 8px 8px 0;
+}
